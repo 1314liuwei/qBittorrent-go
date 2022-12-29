@@ -2,6 +2,7 @@ package qBittorent
 
 import (
 	"bytes"
+	"context"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -12,7 +13,7 @@ type Response struct {
 	Body       []byte
 }
 
-func (c *Client) PostFormData(p string, data map[string]string) (*Response, error) {
+func (c *Client) PostFormData(ctx context.Context, p string, data map[string]string) (*Response, error) {
 	payload := &bytes.Buffer{}
 	writer := multipart.NewWriter(payload)
 	for k, v := range data {
@@ -27,6 +28,7 @@ func (c *Client) PostFormData(p string, data map[string]string) (*Response, erro
 		return nil, err
 	}
 	request.Header.Add("Content-Type", writer.FormDataContentType())
+	request.WithContext(ctx)
 
 	res, err := c.client.Do(request)
 	if err != nil {

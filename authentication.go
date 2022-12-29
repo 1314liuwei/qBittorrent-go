@@ -16,7 +16,7 @@ func (c *Client) Login(ctx context.Context, username, password string) error {
 
 	c.client.Jar = jar
 
-	res, err := c.PostFormData("/api/v2/auth/login", map[string]string{
+	res, err := c.PostFormData(ctx, "/api/v2/auth/login", map[string]string{
 		"username": username,
 		"password": password,
 	})
