@@ -44,3 +44,12 @@ func TestGetAPIVersion(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Regexp(t, regexp.MustCompile("^[0-9].[0-9]"), version)
 }
+
+func TestGetBuildInfo(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	info, err := client.GetBuildInfo(ctx)
+	assert.NoError(t, err)
+	assert.NotNil(t, info)
+}
