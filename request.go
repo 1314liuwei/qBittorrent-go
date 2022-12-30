@@ -6,6 +6,7 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 )
 
 type Response struct {
@@ -46,5 +47,36 @@ func (c *Client) PostFormData(ctx context.Context, p string, data map[string]str
 		Body:       all,
 	}
 
+	return response, nil
+}
+
+func (c *Client) Get(ctx context.Context, p string, data map[string]string) (*Response, error) {
+	payload := url.Values{}
+	for k, v := range data {
+		payload.Set(k, v)
+	}
+
+	Url, err := url.Parse(c.BasePath + p)
+	if err != nil {
+		return nil, err
+	}
+	Url.RawQuery = payload.Encode()
+	urlPath := Url.String()
+
+	resp, err := c.client.Get(urlPath)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	content, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &Response{
+		StatusCode: resp.StatusCode,
+		Body:       content,
+	}
 	return response, nil
 }
