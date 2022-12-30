@@ -1,5 +1,13 @@
 package qBittorent
 
-//func (c *Client) GetApplicationVersion(ctx context.Context) (string,error) {
-//
-//}
+import (
+	"context"
+)
+
+func (c *Client) GetApplicationVersion(ctx context.Context) (string, error) {
+	res, err := c.Get(ctx, "/api/v2/app/version", nil)
+	if err != nil {
+		return "", err
+	}
+	return string(res.Body), nil
+}
