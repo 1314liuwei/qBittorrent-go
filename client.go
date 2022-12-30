@@ -1,6 +1,7 @@
 package qBittorent
 
 import (
+	"context"
 	"net/http"
 )
 
@@ -20,6 +21,11 @@ func NewClientWithConfig(conf Config) *Client {
 	}
 }
 
-func NewClient() *Client {
-	return NewClientWithConfig(Config{BasePath: "http://localhost:8080"})
+func New(host, user, password string) (*Client, error) {
+	client := NewClientWithConfig(Config{BasePath: host})
+	err := client.Login(context.Background(), user, password)
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
 }
