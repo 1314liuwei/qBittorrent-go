@@ -30,3 +30,16 @@ func (c *Client) Login(ctx context.Context, username, password string) error {
 
 	return errors.New("login failed")
 }
+
+func (c *Client) Logout(ctx context.Context) error {
+	c.client.Jar = nil
+	res, err := c.PostFormData(ctx, "/api/v2/auth/logout", map[string]string{})
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return errors.New("logout failed")
+	}
+	return nil
+}
