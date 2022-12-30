@@ -2,6 +2,7 @@ package qBittorent
 
 import (
 	"context"
+	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -32,5 +33,14 @@ func TestGetApplicationVersion(t *testing.T) {
 	assert.NoError(t, err)
 	version, err := client.GetApplicationVersion(ctx)
 	assert.NoError(t, err)
-	assert.Contains(t, version, "v")
+	assert.Regexp(t, regexp.MustCompile("v[0-9].[0-9].[0-9]"), version)
+}
+
+func TestGetAPIVersion(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	version, err := client.GetAPIVersion(ctx)
+	assert.NoError(t, err)
+	assert.Regexp(t, regexp.MustCompile("^[0-9].[0-9]"), version)
 }
