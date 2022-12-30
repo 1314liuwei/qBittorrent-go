@@ -53,3 +53,12 @@ func TestGetBuildInfo(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, info)
 }
+
+func TestGetApplicationPreferences(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	info, err := client.GetApplicationPreferences(ctx)
+	assert.NoError(t, err)
+	assert.NotNil(t, info)
+}
