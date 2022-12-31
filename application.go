@@ -215,3 +215,12 @@ func (c *Client) GetApplicationPreferences(ctx context.Context) (*Preferences, e
 
 	return result, nil
 }
+
+func (c *Client) GetDefaultSavePath(ctx context.Context) (string, error) {
+	res, err := c.Get(ctx, "/api/v2/app/defaultSavePath", nil)
+	if err != nil {
+		return "", err
+	}
+
+	return string(res.Body), nil
+}
