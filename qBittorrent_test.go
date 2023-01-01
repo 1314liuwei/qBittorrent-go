@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	Host     = "http://192.168.36.131:8080"
+	Host     = "http://127.0.0.1:8080"
 	User     = "admin"
 	Password = "adminadmin"
 )
@@ -70,4 +70,22 @@ func TestGetDefaultSavePath(t *testing.T) {
 	info, err := client.GetDefaultSavePath(ctx)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, info)
+}
+
+/*
+Log functional testing
+*/
+
+func TestGetLog(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	info, err := client.GetLog(ctx, &QueryMainLogParam{
+		Normal:   true,
+		Info:     true,
+		Warning:  true,
+		Critical: true,
+	})
+	assert.NoError(t, err)
+	assert.NotNil(t, info)
 }
