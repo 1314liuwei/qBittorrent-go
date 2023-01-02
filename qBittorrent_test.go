@@ -120,3 +120,12 @@ func TestGetTorrentPeersData(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, info)
 }
+
+func TestGetTransferInfo(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	info, err := client.GetTransferInfo(ctx)
+	assert.NoError(t, err)
+	assert.NotNil(t, info)
+}
