@@ -3,6 +3,7 @@ package qBittorent
 import (
 	"bytes"
 	"context"
+	"github.com/gogf/gf/v2/util/gconv"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -50,10 +51,10 @@ func (c *Client) PostFormData(ctx context.Context, p string, data map[string]str
 	return response, nil
 }
 
-func (c *Client) Get(ctx context.Context, p string, data map[string]string) (*Response, error) {
+func (c *Client) Get(ctx context.Context, p string, data map[string]interface{}) (*Response, error) {
 	payload := url.Values{}
 	for k, v := range data {
-		payload.Set(k, v)
+		payload.Set(k, gconv.String(v))
 	}
 
 	Url, err := url.Parse(c.BasePath + p)

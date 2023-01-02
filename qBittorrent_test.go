@@ -98,3 +98,16 @@ func TestGetPeerLog(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, info)
 }
+
+/*
+Sync functional testing
+*/
+
+func TestGetMainData(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	info, err := client.GetMainData(ctx, 0)
+	assert.NoError(t, err)
+	assert.NotNil(t, info)
+}

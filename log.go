@@ -34,7 +34,7 @@ type PeerLog struct {
 }
 
 func (c *Client) GetLog(ctx context.Context, params *QueryMainLogParam) ([]MainLog, error) {
-	res, err := c.Get(ctx, "/api/v2/log/main", gconv.MapStrStr(*params, "json"))
+	res, err := c.Get(ctx, "/api/v2/log/main", gconv.Map(*params, "json"))
 	if err != nil {
 		panic(err)
 		return nil, err
@@ -50,7 +50,7 @@ func (c *Client) GetLog(ctx context.Context, params *QueryMainLogParam) ([]MainL
 }
 
 func (c *Client) GetPeerLog(ctx context.Context, lid int) ([]PeerLog, error) {
-	res, err := c.Get(ctx, "/api/v2/log/peers", map[string]string{"last_known_id": gconv.String(lid)})
+	res, err := c.Get(ctx, "/api/v2/log/peers", map[string]interface{}{"last_known_id": lid})
 	if err != nil {
 		panic(err)
 		return nil, err
