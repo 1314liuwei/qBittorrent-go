@@ -43,6 +43,30 @@ type SyncMainData struct {
 	} `json:"trackers"`
 }
 
+type SyncTorrentPeersData struct {
+	FullUpdate bool `json:"full_update"`
+	Peers      map[string]struct {
+		Client       string  `json:"client"`
+		Connection   string  `json:"connection"`
+		Country      string  `json:"country"`
+		CountryCode  string  `json:"country_code"`
+		DlSpeed      int     `json:"dl_speed"`
+		Downloaded   int     `json:"downloaded"`
+		Files        string  `json:"files"`
+		Flags        string  `json:"flags"`
+		FlagsDesc    string  `json:"flags_desc"`
+		Ip           string  `json:"ip"`
+		PeerIdClient string  `json:"peer_id_client"`
+		Port         int     `json:"port"`
+		Progress     float64 `json:"progress"`
+		Relevance    float64 `json:"relevance"`
+		UpSpeed      float64 `json:"up_speed"`
+		Uploaded     float64 `json:"uploaded"`
+	} `json:"peers"`
+	Rid       int  `json:"rid"`
+	ShowFlags bool `json:"show_flags"`
+}
+
 func (c *Client) GetMainData(ctx context.Context, rid int) (*SyncMainData, error) {
 	res, err := c.Get(ctx, "/api/v2/sync/maindata", map[string]interface{}{"rid": rid})
 	if err != nil {
@@ -50,6 +74,21 @@ func (c *Client) GetMainData(ctx context.Context, rid int) (*SyncMainData, error
 	}
 
 	result := &SyncMainData{}
+	err = json.Unmarshal(res.Body, result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetTorrentPeersData(ctx context.Context, hash string) (*SyncTorrentPeersData, error) {
+	res, err := c.Get(ctx, "/api/v2/sync/torrentPeers", map[string]interface{}{"hash": hash})
+	if err != nil {
+		return nil, err
+	}
+
+	result := &SyncTorrentPeersData{}
 	err = json.Unmarshal(res.Body, result)
 	if err != nil {
 		return nil, err
