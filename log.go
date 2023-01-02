@@ -25,6 +25,14 @@ type QueryMainLogParam struct {
 	LastKnownId int  `json:"last_known_id"`
 }
 
+type PeerLog struct {
+	Id        int    `json:"id"`
+	IP        string `json:"ip"`
+	Timestamp int    `json:"timestamp"`
+	Blocked   bool   `json:"blocked"`
+	Reason    string `json:"reason"`
+}
+
 func (c *Client) GetLog(ctx context.Context, params *QueryMainLogParam) ([]MainLog, error) {
 	res, err := c.Get(ctx, "/api/v2/log/main", gconv.MapStrStr(*params, "json"))
 	if err != nil {
@@ -33,6 +41,22 @@ func (c *Client) GetLog(ctx context.Context, params *QueryMainLogParam) ([]MainL
 	}
 
 	var result []MainLog
+	err = json.Unmarshal(res.Body, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetPeerLog(ctx context.Context, lid int) ([]PeerLog, error) {
+	res, err := c.Get(ctx, "/api/v2/log/peers", map[string]string{"last_known_id": gconv.String(lid)})
+	if err != nil {
+		panic(err)
+		return nil, err
+	}
+
+	var result []PeerLog
 	err = json.Unmarshal(res.Body, &result)
 	if err != nil {
 		return nil, err

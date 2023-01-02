@@ -89,3 +89,12 @@ func TestGetLog(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, info)
 }
+
+func TestGetPeerLog(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	info, err := client.GetPeerLog(ctx, -1)
+	assert.NoError(t, err)
+	assert.NotNil(t, info)
+}
