@@ -166,3 +166,12 @@ func TestSetGlobalDownloadLimit(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, limit, 1024)
 }
+
+func TestGetGlobalUploadLimit(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	limit, err := client.GetGlobalUploadLimit(ctx)
+	assert.NoError(t, err)
+	assert.NotEqual(t, limit, -1)
+}

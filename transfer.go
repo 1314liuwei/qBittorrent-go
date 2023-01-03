@@ -87,3 +87,12 @@ func (c *Client) SetGlobalDownloadLimit(ctx context.Context, limit int) error {
 	}
 	return nil
 }
+
+func (c *Client) GetGlobalUploadLimit(ctx context.Context) (int, error) {
+	res, err := c.Get(ctx, "/api/v2/transfer/uploadLimit", nil)
+	if err != nil {
+		return -1, err
+	}
+
+	return gconv.Int(strings.TrimSpace(string(res.Body))), nil
+}
