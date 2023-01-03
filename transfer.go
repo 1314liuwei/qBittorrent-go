@@ -110,3 +110,18 @@ func (c *Client) SetGlobalUploadLimit(ctx context.Context, limit int) error {
 	}
 	return nil
 }
+
+func (c *Client) BanPeers(ctx context.Context, peers ...string) error {
+	peersStr := strings.Join(peers, "|")
+	res, err := c.PostFormData(ctx, "/api/v2/transfer/banPeers", map[string]interface{}{
+		"peers": peersStr,
+	})
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return errors.New("set failed")
+	}
+	return nil
+}

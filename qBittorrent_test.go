@@ -186,3 +186,11 @@ func TestSetGlobalUploadLimit(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, limit, 1024)
 }
+
+func TestBanPeers(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	err = client.BanPeers(ctx, "1.1.1.1:8080", "2.2.2.2:80")
+	assert.NoError(t, err)
+}
