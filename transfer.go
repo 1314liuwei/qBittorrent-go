@@ -96,3 +96,17 @@ func (c *Client) GetGlobalUploadLimit(ctx context.Context) (int, error) {
 
 	return gconv.Int(strings.TrimSpace(string(res.Body))), nil
 }
+
+func (c *Client) SetGlobalUploadLimit(ctx context.Context, limit int) error {
+	res, err := c.PostFormData(ctx, "/api/v2/transfer/setUploadLimit", map[string]interface{}{
+		"limit": limit,
+	})
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return errors.New("set failed")
+	}
+	return nil
+}
