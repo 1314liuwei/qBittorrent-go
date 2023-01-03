@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
+	"net/http"
 )
 
 /*
@@ -47,4 +49,16 @@ func (c *Client) GetAlternativeSpeedLimitsState(ctx context.Context) (bool, erro
 	} else {
 		return false, nil
 	}
+}
+
+func (c *Client) ToggleAlternativeSpeedLimits(ctx context.Context) error {
+	res, err := c.PostFormData(ctx, "/api/v2/transfer/toggleSpeedLimitsMode", nil)
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return errors.New("toggle failed")
+	}
+	return nil
 }

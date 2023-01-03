@@ -138,3 +138,11 @@ func TestGetAlternativeSpeedLimitsState(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, state, false)
 }
+
+func TestToggleAlternativeSpeedLimits(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	err = client.ToggleAlternativeSpeedLimits(ctx)
+	assert.NoError(t, err)
+}
