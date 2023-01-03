@@ -15,11 +15,11 @@ type Response struct {
 	Body       []byte
 }
 
-func (c *Client) PostFormData(ctx context.Context, p string, data map[string]string) (*Response, error) {
+func (c *Client) PostFormData(ctx context.Context, p string, data map[string]interface{}) (*Response, error) {
 	payload := &bytes.Buffer{}
 	writer := multipart.NewWriter(payload)
 	for k, v := range data {
-		err := writer.WriteField(k, v)
+		err := writer.WriteField(k, gconv.String(v))
 		if err != nil {
 			return nil, err
 		}

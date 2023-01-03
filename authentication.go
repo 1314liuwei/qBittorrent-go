@@ -20,7 +20,7 @@ func (c *Client) Login(ctx context.Context, username, password string) error {
 
 	c.client.Jar = jar
 
-	res, err := c.PostFormData(ctx, "/api/v2/auth/login", map[string]string{
+	res, err := c.PostFormData(ctx, "/api/v2/auth/login", map[string]interface{}{
 		"username": username,
 		"password": password,
 	})
@@ -36,7 +36,7 @@ func (c *Client) Login(ctx context.Context, username, password string) error {
 }
 
 func (c *Client) Logout(ctx context.Context) error {
-	res, err := c.PostFormData(ctx, "/api/v2/auth/logout", map[string]string{})
+	res, err := c.PostFormData(ctx, "/api/v2/auth/logout", nil)
 	if err != nil {
 		return err
 	}

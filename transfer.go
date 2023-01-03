@@ -66,10 +66,24 @@ func (c *Client) ToggleAlternativeSpeedLimits(ctx context.Context) error {
 }
 
 func (c *Client) GetGlobalDownloadLimit(ctx context.Context) (int, error) {
-	res, err := c.Get(ctx, "/api/v2/transfer/speedLimitsMode", nil)
+	res, err := c.Get(ctx, "/api/v2/transfer/downloadLimit", nil)
 	if err != nil {
 		return -1, err
 	}
 
 	return gconv.Int(strings.TrimSpace(string(res.Body))), nil
+}
+
+func (c *Client) SetGlobalDownloadLimit(ctx context.Context, limit int) error {
+	res, err := c.PostFormData(ctx, "/api/v2/transfer/setDownloadLimit", map[string]interface{}{
+		"limit": limit,
+	})
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return errors.New("set failed")
+	}
+	return nil
 }
