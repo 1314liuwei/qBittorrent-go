@@ -5,7 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/gogf/gf/v2/util/gconv"
 	"net/http"
+	"strings"
 )
 
 /*
@@ -61,4 +63,13 @@ func (c *Client) ToggleAlternativeSpeedLimits(ctx context.Context) error {
 		return errors.New("toggle failed")
 	}
 	return nil
+}
+
+func (c *Client) GetGlobalDownloadLimit(ctx context.Context) (int, error) {
+	res, err := c.Get(ctx, "/api/v2/transfer/speedLimitsMode", nil)
+	if err != nil {
+		return -1, err
+	}
+
+	return gconv.Int(strings.TrimSpace(string(res.Body))), nil
 }

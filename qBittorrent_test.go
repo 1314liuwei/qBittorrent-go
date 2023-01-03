@@ -146,3 +146,12 @@ func TestToggleAlternativeSpeedLimits(t *testing.T) {
 	err = client.ToggleAlternativeSpeedLimits(ctx)
 	assert.NoError(t, err)
 }
+
+func TestGetGlobalDownloadLimit(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	limit, err := client.GetGlobalDownloadLimit(ctx)
+	assert.NoError(t, err)
+	assert.NotEqual(t, limit, -1)
+}
