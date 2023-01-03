@@ -216,6 +216,8 @@ func (c *Client) GetApplicationPreferences(ctx context.Context) (*Preferences, e
 	return result, nil
 }
 
+// TODO: SetApplicationPreferences
+
 func (c *Client) GetDefaultSavePath(ctx context.Context) (string, error) {
 	res, err := c.Get(ctx, "/api/v2/app/defaultSavePath", nil)
 	if err != nil {
