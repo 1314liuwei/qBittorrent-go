@@ -1,9 +1,14 @@
 package qBittorent
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 )
+
+/*
+https://github.com/qbittorrent/qBittorrent/wiki/WebUI-API-(qBittorrent-4.1)#transfer-info
+*/
 
 type TransferInfo struct {
 	ConnectionStatus string `json:"connection_status"`
@@ -16,7 +21,7 @@ type TransferInfo struct {
 	UpRateLimit      int    `json:"up_rate_limit"`
 }
 
-func (c *Client) GetTransferInfo(ctx context.Context) (*TransferInfo, error) {
+func (c *Client) GetGlobalTransferInfo(ctx context.Context) (*TransferInfo, error) {
 	res, err := c.Get(ctx, "/api/v2/transfer/info", nil)
 	if err != nil {
 		return nil, err
@@ -29,4 +34,17 @@ func (c *Client) GetTransferInfo(ctx context.Context) (*TransferInfo, error) {
 	}
 
 	return result, nil
+}
+
+func (c *Client) GetAlternativeSpeedLimitsState(ctx context.Context) (bool, error) {
+	res, err := c.Get(ctx, "/api/v2/transfer/speedLimitsMode", nil)
+	if err != nil {
+		return false, err
+	}
+
+	if bytes.Contains(res.Body, []byte{'1'}) {
+		return true, nil
+	} else {
+		return false, nil
+	}
 }
