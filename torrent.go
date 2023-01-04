@@ -145,8 +145,8 @@ func (c *Client) GetTorrentList(ctx context.Context, params *GetTorrentListQuery
 }
 
 func (c *Client) GetTorrentGenericProperties(ctx context.Context, hash string) (*TorrentGenericProperty, error) {
-	if len(hash) == 0 {
-		return nil, errors.New("hash is required")
+	if err := IsValidHash(hash); err != nil {
+		return nil, err
 	}
 
 	res, err := c.Get(ctx, "/api/v2/torrents/properties", map[string]interface{}{
@@ -170,8 +170,8 @@ func (c *Client) GetTorrentGenericProperties(ctx context.Context, hash string) (
 }
 
 func (c *Client) GetTorrentTrackers(ctx context.Context, hash string) ([]Tracker, error) {
-	if len(hash) == 0 {
-		return nil, errors.New("hash is required")
+	if err := IsValidHash(hash); err != nil {
+		return nil, err
 	}
 
 	res, err := c.Get(ctx, "/api/v2/torrents/trackers", map[string]interface{}{

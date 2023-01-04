@@ -116,7 +116,7 @@ func TestGetTorrentPeersData(t *testing.T) {
 	ctx := context.Background()
 	client, err := New(Host, User, Password)
 	assert.NoError(t, err)
-	info, err := client.GetTorrentPeersData(ctx, "")
+	info, err := client.GetTorrentPeersData(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
 	assert.NoError(t, err)
 	assert.NotNil(t, info)
 }

@@ -83,6 +83,10 @@ func (c *Client) GetMainData(ctx context.Context, rid int) (*SyncMainData, error
 }
 
 func (c *Client) GetTorrentPeersData(ctx context.Context, hash string) (*SyncTorrentPeersData, error) {
+	if err := IsValidHash(hash); err != nil {
+		return nil, err
+	}
+
 	res, err := c.Get(ctx, "/api/v2/sync/torrentPeers", map[string]interface{}{"hash": hash})
 	if err != nil {
 		return nil, err
