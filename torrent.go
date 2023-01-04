@@ -112,6 +112,17 @@ type TorrentGenericProperty struct {
 	UpSpeedAvg             int     `json:"up_speed_avg"`
 }
 
+type Tracker struct {
+	Msg           string `json:"msg"`
+	NumDownloaded int    `json:"num_downloaded"`
+	NumLeeches    int    `json:"num_leeches"`
+	NumPeers      int    `json:"num_peers"`
+	NumSeeds      int    `json:"num_seeds"`
+	Status        int    `json:"status"`
+	Tier          int    `json:"tier"`
+	Url           string `json:"url"`
+}
+
 func (c *Client) GetTorrentList(ctx context.Context, params *GetTorrentListQuery) ([]TorrentInfo, error) {
 	paramsMap := gconv.Map(params)
 	if params != nil && len(params.Hashes) != 0 {
@@ -151,6 +162,31 @@ func (c *Client) GetTorrentGenericProperties(ctx context.Context, hash string) (
 
 	result := new(TorrentGenericProperty)
 	err = json.Unmarshal(res.Body, result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetTorrentTrackers(ctx context.Context, hash string) ([]Tracker, error) {
+	if len(hash) == 0 {
+		return nil, errors.New("hash is required")
+	}
+
+	res, err := c.Get(ctx, "/api/v2/torrents/trackers", map[string]interface{}{
+		"hash": hash,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode == http.StatusNotFound {
+		return nil, errors.New("torrent hash was not found")
+	}
+
+	var result []Tracker
+	err = json.Unmarshal(res.Body, &result)
 	if err != nil {
 		return nil, err
 	}
