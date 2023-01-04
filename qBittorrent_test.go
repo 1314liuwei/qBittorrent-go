@@ -195,11 +195,24 @@ func TestBanPeers(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+/*
+Torrent management functional testing
+*/
+
 func TestGetTorrentList(t *testing.T) {
 	ctx := context.Background()
 	client, err := New(Host, User, Password)
 	assert.NoError(t, err)
 	list, err := client.GetTorrentList(ctx, nil)
+	assert.NoError(t, err)
+	assert.NotNil(t, list)
+}
+
+func TestGetTorrentGenericProperties(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	list, err := client.GetTorrentGenericProperties(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
 	assert.NoError(t, err)
 	assert.NotNil(t, list)
 }

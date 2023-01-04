@@ -3,7 +3,9 @@ package qBittorent
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/gogf/gf/v2/util/gconv"
+	"net/http"
 	"strings"
 )
 
@@ -74,6 +76,42 @@ type TorrentInfo struct {
 	Upspeed           int     `json:"upspeed"`
 }
 
+type TorrentGenericProperty struct {
+	AdditionDate           int     `json:"addition_date"`
+	Comment                string  `json:"comment"`
+	CompletionDate         int     `json:"completion_date"`
+	CreatedBy              string  `json:"created_by"`
+	CreationDate           int     `json:"creation_date"`
+	DlLimit                int     `json:"dl_limit"`
+	DlSpeed                int     `json:"dl_speed"`
+	DlSpeedAvg             int     `json:"dl_speed_avg"`
+	Eta                    int     `json:"eta"`
+	LastSeen               int     `json:"last_seen"`
+	NbConnections          int     `json:"nb_connections"`
+	NbConnectionsLimit     int     `json:"nb_connections_limit"`
+	Peers                  int     `json:"peers"`
+	PeersTotal             int     `json:"peers_total"`
+	PieceSize              int     `json:"piece_size"`
+	PiecesHave             int     `json:"pieces_have"`
+	PiecesNum              int     `json:"pieces_num"`
+	Reannounce             int     `json:"reannounce"`
+	SavePath               string  `json:"save_path"`
+	SeedingTime            int     `json:"seeding_time"`
+	Seeds                  int     `json:"seeds"`
+	SeedsTotal             int     `json:"seeds_total"`
+	ShareRatio             float64 `json:"share_ratio"`
+	TimeElapsed            int     `json:"time_elapsed"`
+	TotalDownloaded        int     `json:"total_downloaded"`
+	TotalDownloadedSession int     `json:"total_downloaded_session"`
+	TotalSize              int     `json:"total_size"`
+	TotalUploaded          int     `json:"total_uploaded"`
+	TotalUploadedSession   int     `json:"total_uploaded_session"`
+	TotalWasted            int     `json:"total_wasted"`
+	UpLimit                int     `json:"up_limit"`
+	UpSpeed                int     `json:"up_speed"`
+	UpSpeedAvg             int     `json:"up_speed_avg"`
+}
+
 func (c *Client) GetTorrentList(ctx context.Context, params *GetTorrentListQuery) ([]TorrentInfo, error) {
 	paramsMap := gconv.Map(params)
 	if params != nil && len(params.Hashes) != 0 {
@@ -88,6 +126,31 @@ func (c *Client) GetTorrentList(ctx context.Context, params *GetTorrentListQuery
 
 	var result []TorrentInfo
 	err = json.Unmarshal(res.Body, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetTorrentGenericProperties(ctx context.Context, hash string) (*TorrentGenericProperty, error) {
+	if len(hash) == 0 {
+		return nil, errors.New("hash is required")
+	}
+
+	res, err := c.Get(ctx, "/api/v2/torrents/properties", map[string]interface{}{
+		"hash": hash,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode == http.StatusNotFound {
+		return nil, errors.New("torrent hash was not found")
+	}
+
+	result := new(TorrentGenericProperty)
+	err = json.Unmarshal(res.Body, result)
 	if err != nil {
 		return nil, err
 	}
