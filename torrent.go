@@ -193,3 +193,38 @@ func (c *Client) GetTorrentTrackers(ctx context.Context, hash string) ([]Tracker
 
 	return result, nil
 }
+
+func (c *Client) GetTorrentWebSeeds(ctx context.Context, hash string) ([]string, error) {
+	if err := IsValidHash(hash); err != nil {
+		return nil, err
+	}
+
+	res, err := c.Get(ctx, "/api/v2/torrents/webseeds", map[string]interface{}{
+		"hash": hash,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode == http.StatusNotFound {
+		return nil, errors.New("torrent hash was not found")
+	}
+
+	var (
+		result []map[string]string
+		urls   []string
+	)
+
+	err = json.Unmarshal(res.Body, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, data := range result {
+		if url, ok := data["url"]; ok {
+			urls = append(urls, url)
+		}
+	}
+
+	return urls, nil
+}

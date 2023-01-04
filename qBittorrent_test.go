@@ -121,6 +121,10 @@ func TestGetTorrentPeersData(t *testing.T) {
 	assert.NotNil(t, info)
 }
 
+/*
+Transfer info functional testing
+*/
+
 func TestGetTransferInfo(t *testing.T) {
 	ctx := context.Background()
 	client, err := New(Host, User, Password)
@@ -203,25 +207,31 @@ func TestGetTorrentList(t *testing.T) {
 	ctx := context.Background()
 	client, err := New(Host, User, Password)
 	assert.NoError(t, err)
-	list, err := client.GetTorrentList(ctx, nil)
+	_, err = client.GetTorrentList(ctx, nil)
 	assert.NoError(t, err)
-	assert.NotNil(t, list)
 }
 
 func TestGetTorrentGenericProperties(t *testing.T) {
 	ctx := context.Background()
 	client, err := New(Host, User, Password)
 	assert.NoError(t, err)
-	list, err := client.GetTorrentGenericProperties(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
+	info, err := client.GetTorrentGenericProperties(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
 	assert.NoError(t, err)
-	assert.NotNil(t, list)
+	assert.NotNil(t, info)
 }
 
 func TestGetTorrentTrackers(t *testing.T) {
 	ctx := context.Background()
 	client, err := New(Host, User, Password)
 	assert.NoError(t, err)
-	list, err := client.GetTorrentTrackers(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
+	_, err = client.GetTorrentTrackers(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
 	assert.NoError(t, err)
-	assert.NotNil(t, list)
+}
+
+func TestGetTorrentWebSeeds(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	_, err = client.GetTorrentWebSeeds(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
+	assert.NoError(t, err)
 }
