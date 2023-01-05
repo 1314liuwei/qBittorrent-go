@@ -123,6 +123,17 @@ type Tracker struct {
 	Url           string `json:"url"`
 }
 
+type TorrentContent struct {
+	Index        int     `json:"index"`
+	IsSeed       bool    `json:"is_seed"`
+	Name         string  `json:"name"`
+	PieceRange   []int   `json:"piece_range"`
+	Priority     int     `json:"priority"`
+	Progress     int     `json:"progress"`
+	Size         int     `json:"size"`
+	Availability float64 `json:"availability"`
+}
+
 func (c *Client) GetTorrentList(ctx context.Context, params *GetTorrentListQuery) ([]TorrentInfo, error) {
 	paramsMap := gconv.Map(params)
 	if params != nil && len(params.Hashes) != 0 {
@@ -227,4 +238,32 @@ func (c *Client) GetTorrentWebSeeds(ctx context.Context, hash string) ([]string,
 	}
 
 	return urls, nil
+}
+
+func (c *Client) GetTorrentContents(ctx context.Context, hash string) ([]TorrentContent, error) {
+	if err := IsValidHash(hash); err != nil {
+		return nil, err
+	}
+
+	res, err := c.Get(ctx, "/api/v2/torrents/webseeds", map[string]interface{}{
+		"hash": hash,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode == http.StatusNotFound {
+		return nil, errors.New("torrent hash was not found")
+	}
+
+	var (
+		result []TorrentContent
+	)
+
+	err = json.Unmarshal(res.Body, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
