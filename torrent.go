@@ -245,7 +245,7 @@ func (c *Client) GetTorrentContents(ctx context.Context, hash string) ([]Torrent
 		return nil, err
 	}
 
-	res, err := c.Get(ctx, "/api/v2/torrents/webseeds", map[string]interface{}{
+	res, err := c.Get(ctx, "/api/v2/torrents/files", map[string]interface{}{
 		"hash": hash,
 	})
 	if err != nil {
@@ -258,6 +258,34 @@ func (c *Client) GetTorrentContents(ctx context.Context, hash string) ([]Torrent
 
 	var (
 		result []TorrentContent
+	)
+
+	err = json.Unmarshal(res.Body, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetTorrentPiecesStates(ctx context.Context, hash string) ([]int, error) {
+	if err := IsValidHash(hash); err != nil {
+		return nil, err
+	}
+
+	res, err := c.Get(ctx, "/api/v2/torrents/pieceStates", map[string]interface{}{
+		"hash": hash,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode == http.StatusNotFound {
+		return nil, errors.New("torrent hash was not found")
+	}
+
+	var (
+		result []int
 	)
 
 	err = json.Unmarshal(res.Body, &result)
