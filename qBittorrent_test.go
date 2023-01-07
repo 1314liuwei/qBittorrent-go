@@ -251,3 +251,11 @@ func TestGetTorrentPiecesStates(t *testing.T) {
 	_, err = client.GetTorrentPiecesStates(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
 	assert.NoError(t, err)
 }
+
+func TestGetTorrentPiecesHashes(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	_, err = client.GetTorrentPiecesHashes(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
+	assert.NoError(t, err)
+}

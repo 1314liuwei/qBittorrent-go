@@ -295,3 +295,31 @@ func (c *Client) GetTorrentPiecesStates(ctx context.Context, hash string) ([]int
 
 	return result, nil
 }
+
+func (c *Client) GetTorrentPiecesHashes(ctx context.Context, hash string) ([]string, error) {
+	if err := IsValidHash(hash); err != nil {
+		return nil, err
+	}
+
+	res, err := c.Get(ctx, "/api/v2/torrents/pieceHashes", map[string]interface{}{
+		"hash": hash,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode == http.StatusNotFound {
+		return nil, errors.New("torrent hash was not found")
+	}
+
+	var (
+		result []string
+	)
+
+	err = json.Unmarshal(res.Body, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
