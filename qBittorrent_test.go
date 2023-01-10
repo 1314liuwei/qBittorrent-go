@@ -256,6 +256,6 @@ func TestGetTorrentPiecesHashes(t *testing.T) {
 	ctx := context.Background()
 	client, err := New(Host, User, Password)
 	assert.NoError(t, err)
-	_, err = client.GetTorrentPiecesHashes(ctx, "ss")
+	_, err = client.GetTorrentPiecesHashes(ctx, "TEST")
 	assert.NoError(t, err)
 }
