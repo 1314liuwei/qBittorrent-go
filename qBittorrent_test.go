@@ -259,3 +259,11 @@ func TestGetTorrentPiecesHashes(t *testing.T) {
 	_, err = client.GetTorrentPiecesHashes(ctx, "TEST")
 	assert.NoError(t, err)
 }
+
+func TestGetPauseTorrents(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	err = client.PauseTorrents(ctx, "2a99f2d2f7d25f01746e132a6ecd2ec6573b9a83")
+	assert.NoError(t, err)
+}
