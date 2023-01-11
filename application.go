@@ -3,6 +3,8 @@ package qBittorent
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"net/http"
 )
 
 /*
@@ -199,6 +201,18 @@ func (c *Client) GetBuildInfo(ctx context.Context) (*BuildInfo, error) {
 	}
 
 	return result, nil
+}
+
+func (c *Client) ShutdownApplication(ctx context.Context) error {
+	res, err := c.PostFormData(ctx, "/api/v2/app/shutdown", nil)
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return errors.New("shutdown app fail")
+	}
+	return nil
 }
 
 func (c *Client) GetApplicationPreferences(ctx context.Context) (*Preferences, error) {

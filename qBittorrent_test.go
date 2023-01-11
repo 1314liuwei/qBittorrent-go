@@ -54,6 +54,14 @@ func TestGetBuildInfo(t *testing.T) {
 	assert.NotNil(t, info)
 }
 
+func TestShutdownApplication(t *testing.T) {
+	ctx := context.Background()
+	client, err := New(Host, User, Password)
+	assert.NoError(t, err)
+	err = client.ShutdownApplication(ctx)
+	assert.NoError(t, err)
+}
+
 func TestGetApplicationPreferences(t *testing.T) {
 	ctx := context.Background()
 	client, err := New(Host, User, Password)
