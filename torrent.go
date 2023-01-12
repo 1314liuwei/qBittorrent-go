@@ -344,3 +344,24 @@ func (c *Client) PauseTorrents(ctx context.Context, hashes ...string) error {
 	}
 	return nil
 }
+
+func (c *Client) ResumeTorrents(ctx context.Context, hashes ...string) error {
+	for i := 0; i < len(hashes); i++ {
+		if err := IsValidHash(hashes[i]); err != nil {
+			return err
+		}
+	}
+
+	hashStr := strings.Join(hashes, "|")
+	res, err := c.Get(ctx, "/api/v2/torrents/resume", map[string]interface{}{
+		"hashes": hashStr,
+	})
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode == http.StatusNotFound {
+		return errors.New("torrent hash was not found")
+	}
+	return nil
+}
